@@ -99,4 +99,23 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>gitlab-maven</id>
+			<name>gitlab-maven</name>
+			<url>https://gitlab.lan.elite-zettl.at/api/v4/projects/2/packages/maven</url>
+		</repository>
+	</repositories>
+	<distributionManagement>
+		<repository>
+			<id>gitlab-maven</id>
+			<name>gitlab-maven</name>
+			<url>https://gitlab.lan.elite-zettl.at/api/v4/projects/2/packages/maven</url>
+		</repository>
+		<snapshotRepository>
+			<id>gitlab-maven</id>
+			<name>gitlab-maven</name>
+			<url>https://gitlab.lan.elite-zettl.at/api/v4/projects/2/packages/maven</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
