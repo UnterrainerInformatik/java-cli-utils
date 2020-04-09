@@ -51,7 +51,7 @@ public class CliParserBuilder {
 		return this;
 	}
 
-	public CliParserBuilder atLeastOneRequired(final String... longNames) {
+	public CliParserBuilder addAtLeastOneRequired(final String... longNames) {
 		atLeastOneRequired.add(new HashSet<>(Arrays.asList(longNames)));
 		return this;
 	}
