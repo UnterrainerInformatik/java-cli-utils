@@ -15,8 +15,6 @@ public class BuilderTests {
 				.addArg(Arg.String("source").description("the source file").defaultValue("testsource"))
 				.addArg(Arg.Float("float").description("testfloat").defaultValue(3.2F)).addArg(Arg.String("arg"))
 				.create();
-
-		cli.printHelpIfOptionIsSet();
 	}
 
 	@Test
