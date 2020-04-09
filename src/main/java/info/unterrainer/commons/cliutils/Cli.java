@@ -39,9 +39,16 @@ public class Cli {
 		return result;
 	}
 
-	public void printHelpIfOptionIsSet() {
-		if (isFlagSet("help"))
-			builder.printHelp();
+	public boolean checkForHelpAndPrintItIfSet() {
+		if (isFlagSet("help")) {
+			printHelp();
+			return true;
+		}
+		return false;
+	}
+
+	public void printHelp() {
+		builder.printHelp();
 	}
 
 	@SuppressWarnings("unchecked")
