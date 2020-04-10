@@ -19,13 +19,19 @@ import org.apache.commons.cli.ParseException;
 
 public class CliParserBuilder {
 
+	private enum CalculationType {
+		MIN, EXACTLY, MAX
+	}
+
 	protected CommandLineParser parser = new DefaultParser();
 	protected String[] args;
 	protected String jarName;
 	protected String description;
 	final Map<String, Option> options = new HashMap<>();
 	final Map<String, CliOption> defaultValues = new HashMap<>();
-	protected Set<Set<String>> atLeastOneRequired = new HashSet<>();
+	protected Set<Occurrences> minNRequired = new HashSet<>();
+	protected Set<Occurrences> exactlyNRequired = new HashSet<>();
+	protected Set<Occurrences> maxNRequired = new HashSet<>();
 	private final Map<String, Set<String>> dependencies = new HashMap<>();
 
 	public CliParserBuilder(final String[] args, final String jarName, final String description) {
@@ -51,8 +57,18 @@ public class CliParserBuilder {
 		return this;
 	}
 
-	public CliParserBuilder addAtLeastOneRequired(final String... longNames) {
-		atLeastOneRequired.add(new HashSet<>(Arrays.asList(longNames)));
+	public CliParserBuilder addMinRequired(final int numberOfOccurrences, final String... longNames) {
+		minNRequired.add(new Occurrences(numberOfOccurrences, longNames));
+		return this;
+	}
+
+	public CliParserBuilder addExactlyRequired(final int numberOfOccurrences, final String... longNames) {
+		exactlyNRequired.add(new Occurrences(numberOfOccurrences, longNames));
+		return this;
+	}
+
+	public CliParserBuilder addMaxRequired(final int numberOfOccurrences, final String... longNames) {
+		maxNRequired.add(new Occurrences(numberOfOccurrences, longNames));
 		return this;
 	}
 
@@ -76,7 +92,14 @@ public class CliParserBuilder {
 			addFlag(Flag.builder("help").description("show this message").shortName("h"));
 
 		CommandLine cmdLine = startParser();
-		validateAtLeastOneRequired(cmdLine);
+		checkOptionsForAvailability(minNRequired);
+		checkOptionsForAvailability(exactlyNRequired);
+		checkOptionsForAvailability(maxNRequired);
+		Set<String> allSetOptionNames = Arrays.stream(cmdLine.getOptions()).map(Option::getLongOpt)
+				.collect(Collectors.toSet());
+		validateNRequired(CalculationType.MIN, allSetOptionNames, minNRequired);
+		validateNRequired(CalculationType.EXACTLY, allSetOptionNames, exactlyNRequired);
+		validateNRequired(CalculationType.MAX, allSetOptionNames, maxNRequired);
 		validateDependencies(cmdLine);
 		return new Cli(cmdLine, this);
 	}
@@ -94,26 +117,50 @@ public class CliParserBuilder {
 		});
 	}
 
-	private void validateAtLeastOneRequired(final CommandLine cmdLine) {
-		Set<String> all = options.keySet();
-		Set<String> allAtLeastOneRequired = atLeastOneRequired.stream().flatMap(Collection::stream)
+	private void checkOptionsForAvailability(final Set<Occurrences> setOfNamesToCheck) {
+		Set<String> allAvailable = options.keySet();
+		Set<String> namesToCheck = setOfNamesToCheck.stream().map(Occurrences::names).flatMap(Collection::stream)
 				.collect(Collectors.toSet());
-		if (!all.containsAll(allAtLeastOneRequired)) {
-			Set<String> unknownOptions = new HashSet<>(allAtLeastOneRequired);
-			unknownOptions.removeAll(all);
+		if (!allAvailable.containsAll(namesToCheck)) {
+			Set<String> unknownOptions = new HashSet<>(namesToCheck);
+			unknownOptions.removeAll(allAvailable);
 			throw new IllegalStateException("Unknown option: " + unknownOptions);
 		}
-
-		Set<String> allRuntimeOptionNames = Arrays.stream(cmdLine.getOptions()).map(Option::getLongOpt)
-				.collect(Collectors.toSet());
-		atLeastOneRequired.forEach(s -> validateAtLeastOneRequiredSubSet(cmdLine, allRuntimeOptionNames, s));
 	}
 
-	private void validateAtLeastOneRequiredSubSet(final CommandLine cmdLine, final Set<String> allRuntimeOptionNames,
-			final Set<String> atLeastOneRequired) {
-		if (allRuntimeOptionNames.stream().noneMatch(shortName -> atLeastOneRequired.contains(shortName)))
-			throw new IllegalStateException(String.format("You should use at least one of these options: '%s'",
-					atLeastOneRequired.stream().sorted().collect(Collectors.joining("', '"))));
+	private void validateNRequired(final CalculationType calculationType, final Set<String> allSetNames,
+			final Set<Occurrences> nRequired) {
+		nRequired.forEach(required -> {
+
+			HashMap<String, Integer> countMap = new HashMap<>();
+			required.names().forEach(s -> countMap.put(s, 0));
+			allSetNames.forEach(s -> {
+				Integer count = countMap.get(s);
+				if (count != null)
+					countMap.put(s, ++count);
+			});
+
+			int n = required.numberOfOccurrences();
+			String nameList = required.names().stream().sorted().collect(Collectors.joining("', '"));
+			int sum = countMap.values().stream().reduce(0, Integer::sum);
+			switch (calculationType) {
+			case MIN:
+				if (sum < n)
+					throw new IllegalStateException(
+							String.format("You should use at least %s of these options: '%s'", n, nameList));
+				break;
+			case EXACTLY:
+				if (sum != n)
+					throw new IllegalStateException(
+							String.format("You should use exactly %s of these options: '%s'", n, nameList));
+				break;
+			case MAX:
+				if (sum > n)
+					throw new IllegalStateException(
+							String.format("You should use at most %s of these options: '%s'", n, nameList));
+				break;
+			}
+		});
 	}
 
 	private CommandLine startParser() {

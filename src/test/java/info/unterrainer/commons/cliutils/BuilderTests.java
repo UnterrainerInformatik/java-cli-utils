@@ -7,14 +7,16 @@ import org.junit.Test;
 
 public class BuilderTests {
 
-	@Test
-	public void exampleDisplayHelp() {
+	public void exampleCheckForHelpAndDisplayIt() {
 		String[] args = "-h".split(" ");
 		Cli cli = CliParser.cliFor(args, "test", "a test program")
 				.addFlag(Flag.builder("test").description("a test flag"))
 				.addArg(Arg.String("source").description("the source file").defaultValue("testsource"))
 				.addArg(Arg.Float("float").description("testfloat").defaultValue(3.2F)).addArg(Arg.String("arg"))
 				.create();
+
+		if (cli.checkForHelpAndPrintItIfSet())
+			System.exit(0);
 	}
 
 	@Test
@@ -71,5 +73,51 @@ public class BuilderTests {
 		assertThat((Float) cli.getArgValue("float")).isEqualByComparingTo(1.9F);
 		assertThat((Double) cli.getArgValue("double")).isEqualByComparingTo(2.3D);
 		assertThat((Integer) cli.getArgValue("integer")).isEqualByComparingTo(3);
+	}
+
+	@Test
+	public void addingExactlyConstraintAndViolatingItThrowsException() {
+		String[] args = "--flat --row".split(" ");
+		assertThrows(RuntimeException.class,
+				() -> CliParser.cliFor(args, "test", "a test program").addFlag(Flag.builder("flat"))
+						.addFlag(Flag.builder("row")).addExactlyRequired(1, "flat", "row").create());
+	}
+
+	@Test
+	public void addingExactlyConstraintAndNotViolatingItWorks() {
+		String[] args = "--flat".split(" ");
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addFlag(Flag.builder("flat"))
+				.addFlag(Flag.builder("row")).addExactlyRequired(1, "flat", "row").create();
+		assertThat(cli.isFlagSet("flat")).isTrue();
+	}
+
+	@Test
+	public void addingMinConstraintAndViolatingItThrowsException() {
+		String[] args = "".split(" ");
+		assertThrows(RuntimeException.class, () -> CliParser.cliFor(args, "test", "a test program")
+				.addFlag(Flag.builder("flat")).addFlag(Flag.builder("row")).addMinRequired(1, "flat", "row").create());
+	}
+
+	@Test
+	public void addingMinConstraintAndNotViolatingItWorks() {
+		String[] args = "--row".split(" ");
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addFlag(Flag.builder("flat"))
+				.addFlag(Flag.builder("row")).addMinRequired(1, "flat", "row").create();
+		assertThat(cli.isFlagSet("row")).isTrue();
+	}
+
+	@Test
+	public void addingMaxConstraintAndViolatingItThrowsException() {
+		String[] args = "--flat --row".split(" ");
+		assertThrows(RuntimeException.class, () -> CliParser.cliFor(args, "test", "a test program")
+				.addFlag(Flag.builder("flat")).addFlag(Flag.builder("row")).addMaxRequired(1, "flat", "row").create());
+	}
+
+	@Test
+	public void addingMaxConstraintAndNotViolatingItWorks() {
+		String[] args = "--flat".split(" ");
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addFlag(Flag.builder("flat"))
+				.addFlag(Flag.builder("row")).addMaxRequired(1, "flat", "row").create();
+		assertThat(cli.isFlagSet("flat")).isTrue();
 	}
 }
