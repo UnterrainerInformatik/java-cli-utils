@@ -15,7 +15,7 @@ public class BuilderTests {
 				.addArg(Arg.Float("float").description("testfloat").defaultValue(3.2F)).addArg(Arg.String("arg"))
 				.create();
 
-		if (cli.checkForHelpAndPrintItIfSet())
+		if (cli.isHelpSet())
 			System.exit(0);
 	}
 

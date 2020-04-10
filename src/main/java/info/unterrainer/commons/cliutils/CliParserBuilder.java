@@ -92,16 +92,25 @@ public class CliParserBuilder {
 			addFlag(Flag.builder("help").description("show this message").shortName("h"));
 
 		CommandLine cmdLine = startParser();
-		checkOptionsForAvailability(minNRequired);
-		checkOptionsForAvailability(exactlyNRequired);
-		checkOptionsForAvailability(maxNRequired);
-		Set<String> allSetOptionNames = Arrays.stream(cmdLine.getOptions()).map(Option::getLongOpt)
-				.collect(Collectors.toSet());
-		validateNRequired(CalculationType.MIN, allSetOptionNames, minNRequired);
-		validateNRequired(CalculationType.EXACTLY, allSetOptionNames, exactlyNRequired);
-		validateNRequired(CalculationType.MAX, allSetOptionNames, maxNRequired);
-		validateDependencies(cmdLine);
-		return new Cli(cmdLine, this);
+		try {
+			if (cmdLine.hasOption("help"))
+				printHelp();
+			else {
+				checkOptionsForAvailability(minNRequired);
+				checkOptionsForAvailability(exactlyNRequired);
+				checkOptionsForAvailability(maxNRequired);
+				Set<String> allSetOptionNames = Arrays.stream(cmdLine.getOptions()).map(Option::getLongOpt)
+						.collect(Collectors.toSet());
+				validateNRequired(CalculationType.MIN, allSetOptionNames, minNRequired);
+				validateNRequired(CalculationType.EXACTLY, allSetOptionNames, exactlyNRequired);
+				validateNRequired(CalculationType.MAX, allSetOptionNames, maxNRequired);
+				validateDependencies(cmdLine);
+			}
+			return new Cli(cmdLine, this);
+		} catch (Exception e) {
+			printHelp();
+			throw e;
+		}
 	}
 
 	private void validateDependencies(final CommandLine cmdLine) {

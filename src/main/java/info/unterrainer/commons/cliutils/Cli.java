@@ -39,12 +39,8 @@ public class Cli {
 		return result;
 	}
 
-	public boolean checkForHelpAndPrintItIfSet() {
-		if (isFlagSet("help")) {
-			printHelp();
-			return true;
-		}
-		return false;
+	public boolean isHelpSet() {
+		return isFlagSet("help");
 	}
 
 	public void printHelp() {
