@@ -21,7 +21,7 @@ Cli cli = CliParser
 	.addFlag(Flag.builder("list").shortName("l")
 	.description("browses and lists all REST-API methods of this server instance"))
 	.addMinRequired(1, "list").create();
-if (cli.checkForHelpAndPrintItIfSet()) {
+if (cli.isHelpSet()) {
 	System.exit(0);
 }
 String endpointUrl = cli.getArgValue("server");

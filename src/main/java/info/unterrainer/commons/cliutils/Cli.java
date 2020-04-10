@@ -23,9 +23,9 @@ public class Cli {
 	@SuppressWarnings("unchecked")
 	public <T> T getArgValue(final String longName) {
 		T result;
+		CliOption o = builder.options.get(longName);
 		try {
 			Object obj = cl.getParsedOptionValue(longName);
-			CliOption o = builder.defaultValues.get(longName);
 			if (obj == null)
 				result = null;
 			else
@@ -34,8 +34,8 @@ public class Cli {
 			builder.printHelp();
 			throw new RuntimeException(e.getMessage());
 		}
-		if (result == null && builder.defaultValues.containsKey(longName))
-			result = (T) builder.defaultValues.get(longName).defaultValue();
+		if (result == null && o.hasDefaultValue())
+			result = (T) o.defaultValue();
 		return result;
 	}
 

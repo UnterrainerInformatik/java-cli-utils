@@ -44,6 +44,22 @@ public class BuilderTests {
 	}
 
 	@Test
+	public void shortNameTriggersHelp() {
+		String[] args = "-h".split(" ");
+		Cli cli = CliParser.cliFor(args, "test", "a test program").create();
+
+		assertThat(cli.isHelpSet()).isTrue();
+	}
+
+	@Test
+	public void longNameTriggersHelp() {
+		String[] args = "--help".split(" ");
+		Cli cli = CliParser.cliFor(args, "test", "a test program").create();
+
+		assertThat(cli.isHelpSet()).isTrue();
+	}
+
+	@Test
 	public void notAddedFlagThrowsRuntimeException() {
 		String[] args = "--flat".split(" ");
 		assertThrows(RuntimeException.class, () -> CliParser.cliFor(args, "test", "a test program").create());
@@ -64,7 +80,7 @@ public class BuilderTests {
 
 	@Test
 	public void addingAndSettingArgsWithDefaultValuesReturnsSetValues() {
-		String[] args = "-h --string blah --float 1.9 --double 2.3 --integer 3".split(" ");
+		String[] args = "--string blah --float=1.9 --double 2.3 --integer 3".split(" ");
 		Cli cli = CliParser.cliFor(args, "test", "a test program").addArg(Arg.String("string").defaultValue("test"))
 				.addArg(Arg.Float("float").defaultValue(3.2F)).addArg(Arg.Double("double").defaultValue(3.3D))
 				.addArg(Arg.Integer("integer").defaultValue(2)).create();
@@ -119,5 +135,23 @@ public class BuilderTests {
 		Cli cli = CliParser.cliFor(args, "test", "a test program").addFlag(Flag.builder("flat"))
 				.addFlag(Flag.builder("row")).addMaxRequired(1, "flat", "row").create();
 		assertThat(cli.isFlagSet("flat")).isTrue();
+	}
+
+	@Test
+	public void quotedArgumentsWork() {
+		String[] args = new String[] { "--string", "\"blah = blubb\"" };
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addArg(Arg.String("string")).create();
+
+		assertThat((String) cli.getArgValue("string")).isEqualTo("blah = blubb");
+	}
+
+	@Test
+	public void unsetArgsAreUnsetEvenIfTheyHaveDefaultValues() {
+		String[] args = "".split(" ");
+		Cli cli = CliParser.cliFor(args, "test", "a test program")
+				.addArg(Arg.String("string").defaultValue("blah").optional()).create();
+
+		assertThat(cli.isArgSet("string")).isFalse();
+		assertThat((String) cli.getArgValue("string")).isEqualTo("blah");
 	}
 }

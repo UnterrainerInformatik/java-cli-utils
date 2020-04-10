@@ -8,7 +8,7 @@ public class Arg<T> extends Flag {
 	protected boolean unlimitedArgs;
 	protected boolean isOptional;
 	protected String[] argNames = new String[] { "ARG" };
-	protected char valueSeparator = '=';
+	protected char valueSeparator = ',';
 	protected Class<?> type;
 	protected boolean hasDefault;
 	protected T defaultValue;
@@ -52,9 +52,10 @@ public class Arg<T> extends Flag {
 			builder.hasArgs().argName("ARG> <...");
 		else
 			builder.numberOfArgs(argNames.length).argName(String.join("> <", argNames));
-		parent.options.put(longName, builder.build());
+		CliOption opt = new CliOption().option(builder.build()).type(type).hasDefaultValue(hasDefault);
 		if (hasDefault)
-			parent.defaultValues.put(longName, new CliOption(defaultValue, type));
+			opt.defaultValue(defaultValue);
+		parent.options.put(longName, opt);
 	}
 
 	@Override

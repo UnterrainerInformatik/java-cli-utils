@@ -27,8 +27,7 @@ public class CliParserBuilder {
 	protected String[] args;
 	protected String jarName;
 	protected String description;
-	final Map<String, Option> options = new HashMap<>();
-	final Map<String, CliOption> defaultValues = new HashMap<>();
+	final Map<String, CliOption> options = new HashMap<>();
 	protected Set<Occurrences> minNRequired = new HashSet<>();
 	protected Set<Occurrences> exactlyNRequired = new HashSet<>();
 	protected Set<Occurrences> maxNRequired = new HashSet<>();
@@ -38,13 +37,6 @@ public class CliParserBuilder {
 		this.args = args;
 		this.jarName = jarName;
 		this.description = description;
-	}
-
-	public CliParserBuilder addRawOption(final Option option) {
-		validateOpt(option.getOpt());
-		validatelongName(option.getLongOpt());
-		options.put(option.getLongOpt(), option);
-		return this;
 	}
 
 	public CliParserBuilder addFlag(final Flag flagBuilder) {
@@ -77,19 +69,9 @@ public class CliParserBuilder {
 		return this;
 	}
 
-	private void validateOpt(final String opt) {
-		if ("h".equalsIgnoreCase(opt))
-			throw new IllegalStateException("'h' is reserved for the 'help'-option.");
-	}
-
-	private void validatelongName(final String longName) {
-		if (longName == null)
-			throw new IllegalStateException("You have to define a long option name.");
-	}
-
 	public Cli create() {
 		if (!options.containsKey("help"))
-			addFlag(Flag.builder("help").description("show this message").shortName("h"));
+			addFlag(Flag.builder("help").shortName("h").description("show this message"));
 
 		CommandLine cmdLine = startParser();
 		try {
@@ -191,7 +173,7 @@ public class CliParserBuilder {
 
 	private Options createOptions() {
 		Options result = new Options();
-		options.values().forEach(result::addOption);
+		options.values().forEach(e -> result.addOption(e.option()));
 		return result;
 	}
 }

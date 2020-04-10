@@ -18,8 +18,8 @@ public class Flag {
 	}
 
 	void addToOptions(final CliParserBuilder parent) {
-		parent.options.put(longName,
-				Option.builder(shortName).required(isRequired).longOpt(longName).desc(description).build());
+		parent.options.put(longName, new CliOption()
+				.option(Option.builder(shortName).required(isRequired).longOpt(longName).desc(description).build()));
 	}
 
 	public Flag shortName(final String shortName) {
