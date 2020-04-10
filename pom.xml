@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>info.unterrainer.commons</groupId>
 	<artifactId>cli-utils</artifactId>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<name>CliUtils</name>
 	<packaging>jar</packaging>
 
