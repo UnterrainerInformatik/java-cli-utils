@@ -148,10 +148,49 @@ public class BuilderTests {
 	@Test
 	public void unsetArgsAreUnsetEvenIfTheyHaveDefaultValues() {
 		String[] args = "".split(" ");
-		Cli cli = CliParser.cliFor(args, "test", "a test program")
-				.addArg(Arg.String("string").defaultValue("blah").optional()).create();
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addArg(Arg.String("string").defaultValue("blah"))
+				.create();
 
 		assertThat(cli.isArgSet("string")).isFalse();
 		assertThat((String) cli.getArgValue("string")).isEqualTo("blah");
+	}
+
+	@Test
+	public void mandatoryArgsSetByShortNameAreSet() {
+		String[] args = new String[] { "-r", "\"ns=3;s=Honeywell_OPC\"" };
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addArg(Arg.String("result").shortName("r")).create();
+
+		assertThat(cli.isArgSet("result")).isTrue();
+		assertThat((String) cli.getArgValue("result")).isEqualTo("ns=3;s=Honeywell_OPC");
+	}
+
+	@Test
+	public void argsSetByShortNameAreSet() {
+		String[] args = new String[] { "-r", "\"ns=3;s=Honeywell_OPC\"" };
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addArg(Arg.String("result").shortName("r")).create();
+
+		assertThat(cli.isArgSet("result")).isTrue();
+		assertThat((String) cli.getArgValue("result")).isEqualTo("ns=3;s=Honeywell_OPC");
+	}
+
+	@Test
+	public void argsShortNamesAreCaseSensitive1() {
+		String[] args = new String[] { "-r", "\"ns=3;s=Honeywell_OPC\"" };
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addArg(Arg.String("result").shortName("r"))
+				.addArg(Arg.String("recursive").shortName("R")).create();
+
+		assertThat(cli.isArgSet("result")).isTrue();
+		assertThat(cli.isArgSet("recursive")).isFalse();
+		assertThat((String) cli.getArgValue("result")).isEqualTo("ns=3;s=Honeywell_OPC");
+	}
+
+	@Test
+	public void flagsShortNamesAreCaseSensitive2() {
+		String[] args = new String[] { "-R" };
+		Cli cli = CliParser.cliFor(args, "test", "a test program").addFlag(Flag.builder("result").shortName("r"))
+				.addFlag(Flag.builder("recursive").shortName("R")).create();
+
+		assertThat(cli.isFlagSet("result")).isFalse();
+		assertThat(cli.isFlagSet("recursive")).isTrue();
 	}
 }
