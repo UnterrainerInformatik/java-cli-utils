@@ -1,5 +1,8 @@
 package info.unterrainer.commons.cliutils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 
@@ -37,6 +40,25 @@ public class Cli {
 		if (result == null && o.hasDefaultValue())
 			result = (T) o.defaultValue();
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getArgValues(final String longName) {
+		CliOption o = builder.options.get(longName);
+		String[] strings = cl.getOptionValues(longName);
+		List<T> results = new ArrayList<>();
+
+		for (String s : strings) {
+			T result;
+			if (s == null)
+				result = null;
+			else
+				result = (T) convert(s, o.type());
+			if (result == null && o.hasDefaultValue())
+				result = (T) o.defaultValue();
+			results.add(result);
+		}
+		return results;
 	}
 
 	public boolean isHelpSet() {
