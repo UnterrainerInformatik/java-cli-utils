@@ -18,7 +18,7 @@
 
 	<profiles>
 		<profile>
-			<id>Elite-Profile</id>
+			<id>elite</id>
 			<repositories>
 				<repository>
 					<id>gitlab-maven</id>
@@ -30,7 +30,7 @@
 	</profiles>
 
 	<activeProfiles>
-		<activeProfile>myprofile</activeProfile>
+		<activeProfile>elite</activeProfile>
 	</activeProfiles>
 
 </settings>
