@@ -37,8 +37,8 @@ import lombok.Setter;
  * characters like the Eclipse console-implementation (before Mars (4.5)) or a
  * pipe to a file.
  * <p>
- * Default values are:
- * <table summary="default values">
+ * <table>
+ * <caption>Default values</caption>
  * <tr>
  * <td><b>prefix</b></td>
  * <td>"file a: "</td>

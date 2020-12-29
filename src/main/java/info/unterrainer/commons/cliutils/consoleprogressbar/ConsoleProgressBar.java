@@ -25,7 +25,8 @@ import lombok.experimental.Accessors;
  * your applications.
  * <p>
  * Default values are:
- * <table summary="default values">
+ * <table>
+ * <caption>Default values</caption>
  * <tr>
  * <td><b>width</b></td>
  * <td>50</td>

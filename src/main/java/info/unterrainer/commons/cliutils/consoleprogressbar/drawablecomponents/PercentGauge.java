@@ -38,7 +38,8 @@ import lombok.Setter;
  * since for this representation you have to to clear all characters on each
  * redraw using '\b' (backspace).
  * <p>
- * <table summary="default values">
+ * <table>
+ * <caption>Default values</caption>
  * <tr>
  * <td><b>prefix</b></td>
  * <td>"file a: "</td>
