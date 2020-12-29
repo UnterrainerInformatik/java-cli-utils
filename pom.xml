@@ -10,7 +10,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cli-utils</artifactId>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<name>CliUtils</name>
 	<packaging>jar</packaging>
 
