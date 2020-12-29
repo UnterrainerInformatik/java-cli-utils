@@ -30,15 +30,15 @@ import lombok.Setter;
  * }
  * </pre>
  *
- * ... with an ever growing number of '#' characters.</br/>
+ * ... with an ever growing number of '#' characters.<br>
  * You may specify any other begin- , end- , full- or legendFill-character you
- * like. <br />
+ * like. <br>
  * This bar is always working. Even if your console doesn't support control
  * characters like the Eclipse console-implementation (before Mars (4.5)) or a
  * pipe to a file.
  * <p>
  * Default values are:
- * <table>
+ * <table summary="default values">
  * <tr>
  * <td><b>prefix</b></td>
  * <td>"file a: "</td>
@@ -57,7 +57,7 @@ import lombok.Setter;
  * </tr>
  * <tr>
  * <td><b>legendFill</b></td>
- * <td>'>'</td>
+ * <td>'&gt;'</td>
  * </tr>
  * </table>
  */

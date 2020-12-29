@@ -28,12 +28,12 @@ import lombok.Setter;
  * </pre>
  *
  * You may specify any other begin- , end- , full- or empty-character you
- * like.<br />
+ * like.<br>
  * This bar is only a good choice if your console supports control characters
  * since for this representation you have to to clear all characters on each
  * redraw using '\b' (backspace).
  * <p>
- * <table>
+ * <table summary="default values">
  * <tr>
  * <td><b>prefix</b></td>
  * <td>"file a: "</td>

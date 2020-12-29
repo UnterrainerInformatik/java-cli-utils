@@ -20,12 +20,12 @@ import lombok.experimental.Accessors;
  * You may specify if your console supports control-characters (like
  * standard-out) or not (like the Eclipse console-implementation (before Mars
  * (4.5)) or a pipe to a file) if you'd like to use one of the two standard
- * {@link DrawableComponent} implementations.<br/>
+ * {@link DrawableComponent} implementations.<br>
  * You also may implement your own {@link DrawableComponent} and use that in
  * your applications.
  * <p>
  * Default values are:
- * <table>
+ * <table summary="default values">
  * <tr>
  * <td><b>width</b></td>
  * <td>50</td>
