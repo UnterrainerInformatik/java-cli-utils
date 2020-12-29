@@ -42,7 +42,7 @@ public class ConsoleProgressBarTest {
 	}
 
 	@Test
-
+	@Disabled
 	public void PercentGaugeTest() throws InterruptedException {
 		ConsoleProgressBar bar = ConsoleProgressBar.builder()
 				.minValue(0d)
