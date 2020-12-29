@@ -7,7 +7,7 @@ import info.unterrainer.commons.datastructures.Fader;
 public interface DrawableComponent {
 
 	/**
-	 * Draws the graphical component of the progress bar.<br/>
+	 * Draws the graphical component of the progress bar.<br>
 	 * No need to flush the stream after writing. This is done after calling this
 	 * method.
 	 *
@@ -24,7 +24,7 @@ public interface DrawableComponent {
 
 	/**
 	 * Removes the graphical component of the progress bar from the output
-	 * stream.<br/>
+	 * stream.<br>
 	 * No need to flush the stream after writing. This is done after calling this
 	 * method.
 	 *
