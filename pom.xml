@@ -10,9 +10,15 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cli-utils</artifactId>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<name>CliUtils</name>
 	<packaging>jar</packaging>
+
+	<properties>
+		<name>Cli-Utils</name>
+		<package-path>info/unterrainer/commons/cliutils</package-path>
+		<packg-string>info.unterrainer.commons.cliutils</packg-string>
+	</properties>
 
 	<dependencies>
 		<dependency>
