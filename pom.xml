@@ -5,12 +5,12 @@
 	<parent>
 	    <groupId>info.unterrainer.commons</groupId>
 	    <artifactId>parent-pom</artifactId>
-	    <version>0.1.22</version>
+	    <version>0.1.26</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cli-utils</artifactId>
-	<version>0.2.13</version>
+	<version>0.2.14</version>
 	<name>CliUtils</name>
 	<packaging>jar</packaging>
 
@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>info.unterrainer.commons</groupId>
 			<artifactId>datastructures</artifactId>
-			<version>0.1.2</version>
+			<version>0.1.4</version>
 		</dependency>
 	</dependencies>
 	
